@@ -4,22 +4,16 @@ const getData = () => {
     return fetch('https://api.myjson.com/bins/1h3g28').then(res => res.json());
 };
 
-
-
 const buildGraph = (data) => {
     buildComponents(data.components);
-    console.log(data.components);
     buildLinks(data.connections);
 };
 
 const buildComponents = (components) => {
-
     components.forEach(compConfig => {
         const rect = state(compConfig.position.x, compConfig.position.y, compConfig.name);
         allCells[compConfig.id] = rect;
-
     });
-
 };
 
 const buildLinks = (connections) => {
@@ -28,7 +22,7 @@ const buildLinks = (connections) => {
     connections.forEach(connectionConfig => {
         const source = allCells[connectionConfig.source.componentId];
         const target = allCells[connectionConfig.target.componentId];
-        const label = 'From: '  + connectionConfig.source.port + '\n'  + 'To: ' + connectionConfig.target.port;
+        const label = 'From: ' + connectionConfig.source.port + '\n'  + 'To: ' + connectionConfig.target.port;
 
         link(source, target, label);
     });
@@ -40,7 +34,7 @@ getData().then(buildGraph);
 var graph = new joint.dia.Graph;
 
 var paper = new joint.dia.Paper({
-    el: document.getElementById('#paper'),
+    el: $('#paper'),
     width: "100%",
     height: 1000,
     gridSize: 15,
@@ -52,11 +46,13 @@ var paper = new joint.dia.Paper({
 function state(x, y, label) {
 
     let cell = new joint.shapes.basic.Rect({
+
         position: { x: x, y: y },
         size: { width: 200, height: 100 },
         attrs: {
             rect: { fill: '#BAC6CD', stroke: 'rgb(236, 235, 236)' },
-            text : { text: label, fontWeight:'bold'}},
+            text : { text: label, fontWeight:'bold', fontFamily: 'helvetica, sans-serif',letterSpacing: '1px'}},
+
     });
 
     cell.attr('rect/filter', {
@@ -79,24 +75,28 @@ function link(source, target, label) {
         target: { id: target.id },
 
         labels:  [{
-            markup: '<rect id ="test"/><text/><defs>\n' +
+            markup: '<rect/><text/>        <defs>\n' +
             '<linearGradient id="half" x1="0%" y1="0%" x2="0%" y2="100%">\n' +
             '<stop offset="0%" stop-color="#EDEFF0" />\n' +
             '<stop offset="50%" stop-color="#EDEFF0" />\n' +
             '<stop offset="50%" stop-color="white" />\n' +
             '<stop offset="100%" stop-color="white" />\n' +
             '</linearGradient>\n' +
-            ' </defs>',
+            '</defs>',
 
             attrs: {
+
                 text: { text: label || '',
                     fill: 'black',
                     fontWeight:'bold',
                     textAnchor: 'start',
                     refX: '-45%',
-                    refY: '-37%',
+                    refY: '-35%',
+                    wordSpacing:'10px',
+                    fontFamily: 'helvetica, sans-serif',
+                    letterSpacing:'1px',
                     fontSize: 12,
-                    cursor: 'pointer',
+                    cursor: 'pointer'
                 },
                 rect: {
                     fill: 'url(#half)',
@@ -106,8 +106,9 @@ function link(source, target, label) {
                     refHeight: '100%',
                     refX: '-50%',
                     refY: '-50%',
-                    rx: 2,
-                    ry: 2,
+                    transform: 'scale(1.1,1.1)',
+                    rx: 1,
+                    ry: 1,
 
                 }
             },
