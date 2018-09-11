@@ -22,7 +22,7 @@ const buildLinks = (connections) => {
     connections.forEach(connectionConfig => {
         const source = allCells[connectionConfig.source.componentId];
         const target = allCells[connectionConfig.target.componentId];
-        const label = 'From: ' + connectionConfig.source.port + '\n'  + 'To: ' + connectionConfig.target.port;
+        const label = 'From: ' + connectionConfig.source.port + '\n' + 'To: ' + connectionConfig.target.port;
 
         link(source, target, label);
     });
@@ -71,31 +71,28 @@ function state(x, y, label) {
 function link(source, target, label) {
 
     var cell = new joint.shapes.standard.Link({
+
         source: { id: source.id },
         target: { id: target.id },
 
+
         labels:  [{
-            markup: '<rect/><text/>        <defs>\n' +
-            '<linearGradient id="half" x1="0%" y1="0%" x2="0%" y2="100%">\n' +
-            '<stop offset="0%" stop-color="#EDEFF0" />\n' +
-            '<stop offset="50%" stop-color="#EDEFF0" />\n' +
-            '<stop offset="50%" stop-color="white" />\n' +
-            '<stop offset="100%" stop-color="white" />\n' +
-            '</linearGradient>\n' +
-            '</defs>',
-
+            markup: '<rect/><text/><defs>\n' +
+                '<linearGradient id="half" x1="0%" y1="0%" x2="0%" y2="100%">\n' +
+                '<stop offset="0%" stop-color="#EDEFF0" />\n' +
+                '<stop offset="50%" stop-color="#EDEFF0" />\n' +
+                '<stop offset="50%" stop-color="white" />\n' +
+                '<stop offset="100%" stop-color="white" />\n' +
+                '</linearGradient>\n' +
+                '</defs>',
             attrs: {
-
                 text: { text: label || '',
                     fill: 'black',
-                    fontWeight:'bold',
                     textAnchor: 'start',
                     refX: '-45%',
                     refY: '-35%',
-                    wordSpacing:'10px',
                     fontFamily: 'helvetica, sans-serif',
-                    letterSpacing:'1px',
-                    fontSize: 12,
+                    fontSize: 11,
                     cursor: 'pointer'
                 },
                 rect: {
@@ -106,18 +103,52 @@ function link(source, target, label) {
                     refHeight: '100%',
                     refX: '-50%',
                     refY: '-50%',
-                    transform: 'scale(1.1,1.1)',
                     rx: 1,
                     ry: 1,
-
                 }
             },
             size: {
                 width: 150, height: 30
             }
-        }]
-
+        },
+            {
+                markup: '<rect/><text/><defs>\n' +
+                    '<linearGradient id="half" x1="0%" y1="0%" x2="0%" y2="100%">\n' +
+                    '<stop offset="0%" stop-color="#EDEFF0" />\n' +
+                    '<stop offset="50%" stop-color="#EDEFF0" />\n' +
+                    '<stop offset="50%" stop-color="white" />\n' +
+                    '<stop offset="100%" stop-color="white" />\n' +
+                    '</linearGradient>\n' +
+                    '</defs>',
+                attrs: {
+                    text: { text: label || '',
+                        fill: 'black',
+                        textAnchor: 'start',
+                        refX: '-45%',
+                        refY: '-135%',
+                        fontFamily: 'helvetica, sans-serif',
+                        fontSize: 11,
+                        cursor: 'pointer'
+                    },
+                    rect: {
+                        fill: 'url(#half)',
+                        stroke: 'gray',
+                        strokeWidth: 1,
+                        refWidth: '100%',
+                        refHeight: '100%',
+                        refX: '-50%',
+                        refY: '-150%',
+                        rx: 1,
+                        ry: 1,
+                    }
+                },
+                size: {
+                    width: 150, height: 30
+                }
+            }]
     });
+
+
 
     cell.attr('rect/filter', {
         name: 'dropShadow',
