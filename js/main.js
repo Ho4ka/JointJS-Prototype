@@ -43,6 +43,7 @@ var paper = new joint.dia.Paper({
     elementView: joint.dia.ElementView.extend({
         pointerdblclick: function (evt, x, y) {
             this.model.remove();
+
         }
     }),
     linkView: joint.dia.LinkView.extend({
@@ -52,104 +53,6 @@ var paper = new joint.dia.Paper({
     })
 
 });
-
-//
-// paper.on('cell:mouseover', function (cellView, evt) {
-//     showTools(cellView.model);
-// });
-paper.on('cell:mouseout', function (cellView, evt) {
-    hideTools();
-});
-paper.on('cell:contextmenu', function (cellView, evt) {
-    showContextMenu(evt);
-});
-
-var Figure = joint.shapes.basic.Generic.extend({
-    markup: '<g class="rotatable"><g class="scalable"><rect class="outer"/><rect class="inner"/></g><text class="label"/><text class="sheet"/></g>',
-
-    defaults: joint.util.deepSupplement({
-
-        type: 'figure',
-
-        attrs: {
-            '.outer': {
-                fill: '#2E75B6',
-                width: 120,
-                height: 60
-            },
-            '.inner': {
-                fill: '#FFFFFF',
-                'ref-x': 3,
-                'ref-y': 3,
-                width: 112,
-                height: 51
-            },
-            '.label': {
-                fill: '#0D0D0D',
-                text: 'Hello',
-                'font-size': 20,
-                'ref-x': 0.5,
-                'ref-y': 0.55,
-                'text-anchor': 'middle',
-                'y-alignment': 'middle',
-                'font-family': 'Tahoma, Arial, helvetica, sans-serif',
-                'font-weight': 'bold'
-            },
-        }
-
-    }, joint.shapes.basic.Generic.prototype.defaults)
-});
-
-
-function hideTools()
-{
-    this.$tools.css('display', 'none');
-}
-
-function showContextMenu(evt)
-{
-    this.$contextMenu.jqxMenu('open', evt.pageX, evt.pageY);
-}
-
-
-
-this.$tools = $('<div class="toolbar">');
-this.$tools.append('<div class="tools tools-delete"><i class="fa fa-times"></i></div>');
-this.$tools.append('<div class="tools tools-clearlink"><i class="fa fa-chain-broken"></i></div>');
-this.$tools.append('<div class="tools tools-newnext"><i class="fa fa-random"></i></div>');
-this.$tools.append('<div class="tools tools-link"><i class="fa fa-arrow-right"></i></div>');
-this.$tools.append('<div class="tools tools-duplicate"><i class="fa fa-plus"></i></div>');
-this.$tools.css({
-    display: 'none'
-});
-$('.paper').append(this.$tools);
-
-this.$contextMenu = $('' +
-    '<div class="context-menu">' +
-    '<ul>' +
-    '<li id = "process">Add Block' +
-
-    '</li>' +
-    '<li id = "process">Rename' +
-
-    '</li>' +
-    '<li id = "cancel">Delete</li>' +
-    '</ul>' +
-    '</div>');
-$('.paper').append(this.$contextMenu);
-this.$contextMenu.jqxMenu({
-    width: '200px',
-    autoOpenPopup: false,
-    animationShowDuration: 0,
-    animationHideDuration: 0,
-    mode: 'popup'
-});
-
-$(document).on('contextmenu', function (e) {
-    return false;
-});
-
-
 
 function state(x, y, label) {
 
@@ -166,6 +69,7 @@ function state(x, y, label) {
 
     cell.attr('rect/filter', {
         name: 'dropShadow',
+
         args: {
             dx: 0,
             dy: 0,
@@ -173,7 +77,6 @@ function state(x, y, label) {
         }
     });
     graph.addCell(cell);
-
     return cell;
 
 }
@@ -185,10 +88,14 @@ function link(source, target, from, to) {
         source: {id: source.id},
         target: {id: target.id},
 
+        className: 'some-custom-class',
         labels: [{
             markup: '<rect/><text/><defs></defs>',
+
             attrs: {
+
                 text: {
+
                     text: 'From: ' + from || '',
                     fill: 'black',
                     textAnchor: 'start',
@@ -255,8 +162,78 @@ function link(source, target, from, to) {
         }
     });
 
-
-
     graph.addCell(cell);
     return cell;
 }
+
+
+$(function() {
+    $.contextMenu({
+        selector: '#paper',
+        callback: function(key, options) {
+            var m = "clicked: " + key;
+            window.console && console.log(m) || alert(m);
+        },
+        items: {
+            "edit": {name: "Add block", icon: "add"},
+
+            "sep1": "---------",
+            "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+        }
+    });
+
+    $('.context-menu-one').on('click', function(e){
+        console.log('clicked', this);
+    })
+});
+
+
+$(function() {
+    $.contextMenu({
+        selector: 'rect',
+        callback: function(key, options) {
+            var m = "clicked: " + key;
+            window.console && console.log(m) || alert(m);
+        },
+        items: {
+            "edit": {name: "Edit", icon: "edit"},
+            "cut": {name: "Cut", icon: "cut"},
+            copy: {name: "Copy", icon: "copy"},
+            "paste": {name: "Paste", icon: "paste"},
+            "delete": {name: "Delete", icon: "delete"},
+            "sep1": "---------",
+            "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+        }
+    });
+
+    $('.context-menu-one').on('click', function(e){
+        console.log('clicked', this);
+    })
+});
+
+
+$(function() {
+    $.contextMenu({
+        selector: 'g',
+        callback: function(key, options) {
+            var m = "clicked: " + key;
+            window.console && console.log(m) || alert(m);
+        },
+        items: {
+
+            "delete": {name: "Delete", icon: "delete"},
+            "sep1": "---------",
+            "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+        }
+    });
+
+    $('.context-menu-one').on('click', function(e){
+        console.log('clicked', this);
+    })
+});
